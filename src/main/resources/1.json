@@ -1,0 +1,25 @@
+{
+  "errors": {
+    "conflictResolutionType": "Conflict resolution type 'lww' is supported only in enterprise edition",
+    "maxTTL": "Max TTL is supported in enterprise edition only",
+    "compressionMode": "Compression mode is supported in enterprise edition only"
+  },
+  "summaries": {
+    "ramSummary": {
+      "total": 1455423488,
+      "otherBuckets": 641728512,
+      "nodesCount": 1,
+      "perNodeMegs": 128,
+      "thisAlloc": 134217728,
+      "thisUsed": 0,
+      "free": 679477248
+    },
+    "hddSummary": {
+      "total": 494384795648,
+      "otherData": 34592552621,
+      "otherBuckets": 14383074,
+      "thisUsed": 0,
+      "free": 459777859953
+    }
+  }
+}

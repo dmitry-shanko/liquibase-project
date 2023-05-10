@@ -1,0 +1,12 @@
+spring:
+  couchbase:
+    connection-string: couchbase://localhost:11210
+    username: root
+    password: 2605947k
+    bucket: liquibase
+  liquibase:
+    couchbase:
+      change-log: "classpath:/db/changelog/master.xml"
+      username: root
+      password: 2605947k
+      url: couchbase://localhost:11210
