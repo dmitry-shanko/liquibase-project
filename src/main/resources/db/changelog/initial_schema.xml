@@ -9,13 +9,13 @@
         <ext:createBucket>
             <ext:bucketName>liquibase2</ext:bucketName>
             <ext:bucketType>COUCHBASE</ext:bucketType>
-            <ext:compressionMode>OFF</ext:compressionMode>
-            <ext:conflictResolutionType>TIMESTAMP</ext:conflictResolutionType>
+
+
             <ext:evictionPolicy>FULL</ext:evictionPolicy>
             <ext:flushEnabled>false</ext:flushEnabled>
             <ext:minimumDurabilityLevel>NONE</ext:minimumDurabilityLevel>
             <ext:numReplicas>0</ext:numReplicas>
-            <ext:maxExpiryInHours>1</ext:maxExpiryInHours>
+
             <ext:ramQuotaMB>128</ext:ramQuotaMB>
             <ext:replicaIndexes>0</ext:replicaIndexes>
             <ext:storageBackend>couchstore</ext:storageBackend>
@@ -23,4 +23,124 @@
         </ext:createBucket>
     </changeSet>
 
+    <changeSet id="2" author="dmitry.shanko">
+        <ext:createScope>
+            <ext:bucketName>liquibase2</ext:bucketName>
+            <ext:scopeName>travel</ext:scopeName>
+        </ext:createScope>
+    </changeSet>
+
+    <changeSet id="3" author="dmitry.shanko">
+        <ext:createCollection>
+            <ext:bucketName>liquibase2</ext:bucketName>
+            <ext:collectionName>hotels</ext:collectionName>
+            <ext:scopeName>travel</ext:scopeName>
+        </ext:createCollection>
+    </changeSet>
+
+    <changeSet id="4" author="dmitry.shanko">
+        <ext:createPrimaryQueryIndex>
+            <ext:bucketName>liquibase2</ext:bucketName>
+            <ext:collectionName>hotels</ext:collectionName>
+            <ext:deferred>false</ext:deferred>
+            <ext:indexName>hotelsPrimaryIndex</ext:indexName>
+            <ext:numReplicas>0</ext:numReplicas>
+            <ext:scopeName>travel</ext:scopeName>
+        </ext:createPrimaryQueryIndex>
+    </changeSet>
+
+    <changeSet id="5" author="dmitry.shanko">
+        <ext:insertDocuments>
+            <ext:bucketName>liquibase2</ext:bucketName>
+            <ext:scopeName>travel</ext:scopeName>
+            <ext:collectionName>hotels</ext:collectionName>
+            <ext:documents>
+                <ext:document>
+                    <ext:id>1</ext:id>
+                    <ext:value>
+                        <ext:data>{"name":"HotelName1", "stars": 4, "active": true}</ext:data>
+                        <ext:type>Json</ext:type>
+                    </ext:value>
+                </ext:document>
+                <ext:document>
+                    <ext:id>2</ext:id>
+                    <ext:value>
+                        <ext:data>{"name":"HotelName2", "stars": 5, "active": true}</ext:data>
+                        <ext:type>Json</ext:type>
+                    </ext:value>
+                </ext:document>
+                <ext:document>
+                    <ext:id>3</ext:id>
+                    <ext:value>
+                        <ext:data>{"name":"HotelName3", "stars": 3, "active": true}</ext:data>
+                        <ext:type>Json</ext:type>
+                    </ext:value>
+                </ext:document>
+            </ext:documents>
+        </ext:insertDocuments>
+    </changeSet>
+
+    <changeSet id="6" author="dmitry.shanko">
+        <comment>Remove hotel because we don't need it anymore :D</comment>
+        <ext:removeDocuments>
+            <ext:bucketName>liquibase2</ext:bucketName>
+            <ext:scopeName>travel</ext:scopeName>
+            <ext:collectionName>hotels</ext:collectionName>
+            <ext:id>2</ext:id>
+        </ext:removeDocuments>
+    </changeSet>
+
+    <changeSet id="7" author="dmitry.shanko">
+        <comment>Update number of stars for hotel with id 1 :D</comment>
+        <ext:mutateIn>
+            <ext:bucketName>liquibase2</ext:bucketName>
+            <ext:scopeName>travel</ext:scopeName>
+            <ext:collectionName>hotels</ext:collectionName>
+            <ext:id>1</ext:id>
+            <ext:mutateInSpecs>
+                <ext:mutateInSpec>
+                    <ext:path>stars</ext:path>
+                    <ext:value>
+                        <ext:data>5</ext:data>
+                        <ext:type>Long</ext:type>
+                    </ext:value>
+                    <ext:mutateInType>UPSERT</ext:mutateInType>
+                </ext:mutateInSpec>
+            </ext:mutateInSpecs>
+        </ext:mutateIn>
+    </changeSet>
+
+    <changeSet id="8" author="dmitry.shanko">
+        <comment>Temporary make inactive all hotels</comment>
+        <ext:executeQuery>
+            <ext:query>
+                UPDATE liquibase2.travel.hotels SET active = false WHERE active IS NOT MISSING
+            </ext:query>
+        </ext:executeQuery>
+    </changeSet>
+
+    <changeSet id="9" author="dmitry.shanko">
+        <ext:createQueryIndex>
+            <ext:bucketName>liquibase2</ext:bucketName>
+            <ext:collectionName>hotels</ext:collectionName>
+            <ext:deferred>true</ext:deferred>
+            <ext:fields>
+                <ext:field>id</ext:field>
+                <ext:field>country</ext:field>
+            </ext:fields>
+            <ext:indexName>secondaryIndex</ext:indexName>
+            <ext:numReplicas>0</ext:numReplicas>
+            <ext:scopeName>travel</ext:scopeName>
+        </ext:createQueryIndex>
+    </changeSet>
+
+    <changeSet id="10" author="dmitry.shanko">
+        <ext:dropQueryIndex>
+            <ext:isPrimary>false</ext:isPrimary>
+            <ext:indexName>secondaryIndex</ext:indexName>
+            <ext:bucketName>liquibase2</ext:bucketName>
+            <ext:scopeName>travel</ext:scopeName>
+            <ext:collectionName>hotels</ext:collectionName>
+        </ext:dropQueryIndex>
+    </changeSet>
 </databaseChangeLog>

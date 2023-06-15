@@ -13,6 +13,7 @@ public class RotaService {
     private static final String NAME_FIELD = "name";
 
     private final RotaRepo rotaRepo;
+    private final CreateBucketService createBucketService;
 
 
     public Mono<Rota> findRotaById(String rotaId) {
@@ -20,6 +21,7 @@ public class RotaService {
     }
 
     public Mono<Rota> save(Rota rota) {
+        createBucketService.createBucket();
         return rotaRepo.save(rota);
     }
 
