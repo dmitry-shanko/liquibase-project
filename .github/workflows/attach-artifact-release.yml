@@ -19,6 +19,15 @@ jobs:
         #if: github.event.pull_request.merged == true
         runs-on: ubuntu-latest
         steps:
+            - name: Build with Maven
+              run: mvn package --file liquibase-project/pom.xml -DskipTests
+
+            - name: Publish Artifacts
+              uses: actions/upload-artifact@v3
+              with:
+                name: ${{ steps.get-artifact-id.outputs.artifact_id }}-artifacts
+                path: liquibase-project/target/*
+
             - run: sleep 30
             - uses: actions/checkout@v3
 
@@ -33,7 +42,7 @@ jobs:
 
             - name: Get Artifact ID
               id: get-artifact-id
-              run: echo "artifact_id=$(mvn --file liquibase-couchbase/pom.xml help:evaluate -Dexpression=project.artifactId -q -DforceStdout)" >> $GITHUB_ENV
+              run: echo "artifact_id=$(mvn --file liquibase-project/pom.xml help:evaluate -Dexpression=project.artifactId -q -DforceStdout)" >> $GITHUB_ENV
 
             - name: Download artifact
               id: download-artifact
