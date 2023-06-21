@@ -23,17 +23,17 @@ jobs:
                   cache: 'maven'
 
             - name: Build and Package
-              run: mvn --file liquibase-couchbase/pom.xml -B dependency:go-offline clean package -DskipTests=true
+              run: mvn --file liquibase-project/pom.xml -B dependency:go-offline clean package -DskipTests=true
 
             - name: Get Artifact ID
               id: get-artifact-id
-              run: echo "::set-output name=artifact_id::$(mvn --file liquibase-couchbase/pom.xml help:evaluate -Dexpression=project.artifactId -q -DforceStdout)"
+              run: echo "::set-output name=artifact_id::$(mvn --file liquibase-project/pom.xml help:evaluate -Dexpression=project.artifactId -q -DforceStdout)"
 
             - name: Save Artifacts
               uses: actions/upload-artifact@v3
               with:
                   name: ${{ steps.get-artifact-id.outputs.artifact_id }}-artifacts
-                  path: liquibase-couchbase/target/*
+                  path: liquibase-project/target/*
 
             - name: Save Event File
               uses: actions/upload-artifact@v3
@@ -66,10 +66,10 @@ jobs:
             - uses: actions/download-artifact@v3
               with:
                   name: ${{needs.build.outputs.artifact_id}}-artifacts
-                  path: liquibase-couchbase/target
+                  path: liquibase-project/target
 
             - name: Run Tests
-              run: mvn --file liquibase-couchbase/pom.xml -B org.jacoco:jacoco-maven-plugin:0.8.8:prepare-agent verify org.jacoco:jacoco-maven-plugin:0.8.8:report "-Dskip.integration.tests=false"
+              run: mvn --file liquibase-project/pom.xml -B org.jacoco:jacoco-maven-plugin:0.8.8:prepare-agent verify org.jacoco:jacoco-maven-plugin:0.8.8:report "-Dskip.integration.tests=false"
 
             - name: Archive Test Results - ${{ matrix.os }}
               if: ${{ always() }}
@@ -103,10 +103,10 @@ jobs:
             - uses: actions/download-artifact@v3
               with:
                   name: ${{needs.build.outputs.artifact_id}}-artifacts
-                  path: liquibase-couchbase/target
+                  path: liquibase-project/target
 
             - name: Run Tests
-              run: mvn --file liquibase-couchbase/pom.xml -B org.jacoco:jacoco-maven-plugin:0.8.8:prepare-agent verify org.jacoco:jacoco-maven-plugin:0.8.8:report "-Dskip.integration.tests=true"
+              run: mvn --file liquibase-project/pom.xml -B org.jacoco:jacoco-maven-plugin:0.8.8:prepare-agent verify org.jacoco:jacoco-maven-plugin:0.8.8:report "-Dskip.integration.tests=true"
 
             - name: Archive Test Results - ${{ matrix.os }}
               if: ${{ always() }}
