@@ -39,26 +39,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.liquibase.ext</groupId>
-            <artifactId>spring-boot-starter-liquibase-couchbase</artifactId>
-            <version>0.1.0-SNAPSHOT</version>
-        </dependency>
-       <!-- <dependency>
-            <groupId>org.liquibase.ext</groupId>
-            <artifactId>liquibase-couchbase</artifactId>
-            <version>0.1.0-SNAPSHOT</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.liquibase</groupId>
-                    <artifactId>liquibase-core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.couchbase.client</groupId>
-                    <artifactId>java-client</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>-->
-        <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
             <version>4.22.0</version>
