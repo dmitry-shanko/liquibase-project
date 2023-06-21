@@ -12,6 +12,10 @@ on:
       GPG_PASSPHRASE:
         description: 'GPG_PASSPHRASE from the caller workflow'
         required: true
+    inputs:
+      extensionVersion:
+        description: 'Extension Version'
+        required: true
 
 jobs:
   attach-to-release:
