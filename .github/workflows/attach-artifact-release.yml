@@ -56,7 +56,7 @@ jobs:
         id: download-artifact
         uses: dawidd6/action-download-artifact@v2
         with:
-          github_token: ${{secrets.BOT_TOKEN}}
+          github_token: ${{secrets.GITHUB_TOKEN}}
           workflow: test.yml
           pr: ${{github.event.pull_request.number}}
           name: ${{ env.artifact_id }}-artifacts
