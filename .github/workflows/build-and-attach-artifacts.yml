@@ -18,8 +18,8 @@ on:
         required: true
 
 jobs:
-  build-artifacts:
-    name: Build and attach maven artifacts
+  setup:
+    name: Set Up Execution
     runs-on: ubuntu-latest
     outputs:
       extensionVersion: ${{ steps.collect-data.outputs.extensionVersion }}
@@ -32,8 +32,12 @@ jobs:
             core.setOutput("extensionVersion", context.payload.inputs.extensionVersion);
 
       - run: |
-          echo "Saw Extension version ${{ steps.collect-data.outputs.extensionVersion }}"
+          echo "Saw Extension version ${{ steps.collect-data.outputs.extensionVersion }}"  
 
+  build:
+    name: Build Maven Artifacts
+    runs-on: ubuntu-latest
+    steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -51,6 +55,11 @@ jobs:
           name: liquibase-project
           path: target/*
 
+  download-artifacts:
+    needs: [ setup, build ]
+    name: Download Prepared Artifacts
+    runs-on: ubuntu-latest
+    steps:
       - name: Get Reusable Script Files
         run: |
           curl -o $PWD/.github/get_draft_release.sh https://raw.githubusercontent.com/liquibase/build-logic/v0.3.1/.github/get_draft_release.sh
@@ -69,6 +78,11 @@ jobs:
         with:
           name: liquibase-project
 
+  prepare-release:
+    needs: [ download-artifacts ]
+    name: Prepare Release
+    runs-on: ubuntu-latest
+    steps:
       - name: Get Release Tag
         id: get-release-tag
         run: echo "release_tag=$(./.github/get_draft_release.sh TAG)" >> $GITHUB_ENV
@@ -85,6 +99,11 @@ jobs:
           fail-if-no-release: false
           assets: "${{ env.artifact_id }}-*"
 
+  sign-release:
+    needs: [ prepare-releases ]
+    name: Sign Release
+    runs-on: ubuntu-latest
+    steps:
       - name: Import GPG key
         id: import_gpg
         uses: crazy-max/ghaction-import-gpg@v5
@@ -97,9 +116,9 @@ jobs:
           gpg -K
           version=${{ steps.collect-data.outputs.extensionVersion }}
           ./.github/sign_artifact.sh ./${{ env.artifact_id }}-${version}.jar
-#          ./.github/sign_artifact.sh ./${{ env.artifact_id }}-${version}.pom
-#          ./.github/sign_artifact.sh ./${{ env.artifact_id }}-${version}-javadoc.jar
-#          ./.github/sign_artifact.sh ./${{ env.artifact_id }}-${version}-sources.jar
+      #          ./.github/sign_artifact.sh ./${{ env.artifact_id }}-${version}.pom
+      #          ./.github/sign_artifact.sh ./${{ env.artifact_id }}-${version}-javadoc.jar
+      #          ./.github/sign_artifact.sh ./${{ env.artifact_id }}-${version}-sources.jar
 
       - name: Attach Files to Draft Release
         id: upload-release-asset
