@@ -60,16 +60,6 @@ jobs:
     name: Download Prepared Artifacts
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Get Reusable Script Files
-        run: |
-          curl -o $PWD/.github/get_draft_release.sh https://raw.githubusercontent.com/liquibase/build-logic/v0.3.1/.github/get_draft_release.sh
-          curl -o $PWD/.github/sign_artifact.sh https://raw.githubusercontent.com/liquibase/build-logic/v0.3.1/.github/sign_artifact.sh
-          curl -o $PWD/.github/upload_asset.sh https://raw.githubusercontent.com/liquibase/build-logic/v0.3.1/.github/upload_asset.sh
-          chmod +x $PWD/.github/get_draft_release.sh
-          chmod +x $PWD/.github/sign_artifact.sh
-          chmod +x $PWD/.github/upload_asset.sh
-
       - name: Get Artifact ID
         id: get-artifact-id
         run: echo "artifact_id=$(mvn --file pom.xml help:evaluate -Dexpression=project.artifactId -q -DforceStdout)" >> $GITHUB_ENV
@@ -84,6 +74,16 @@ jobs:
     name: Prepare Release
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
+      - name: Get Reusable Script Files
+        run: |
+          curl -o $PWD/.github/get_draft_release.sh https://raw.githubusercontent.com/liquibase/build-logic/v0.3.1/.github/get_draft_release.sh
+          curl -o $PWD/.github/sign_artifact.sh https://raw.githubusercontent.com/liquibase/build-logic/v0.3.1/.github/sign_artifact.sh
+          curl -o $PWD/.github/upload_asset.sh https://raw.githubusercontent.com/liquibase/build-logic/v0.3.1/.github/upload_asset.sh
+          chmod +x $PWD/.github/get_draft_release.sh
+          chmod +x $PWD/.github/sign_artifact.sh
+          chmod +x $PWD/.github/upload_asset.sh
+
       - name: Get Release Tag
         id: get-release-tag
         run: echo "release_tag=$(./.github/get_draft_release.sh TAG)" >> $GITHUB_ENV
