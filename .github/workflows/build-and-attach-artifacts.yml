@@ -95,7 +95,7 @@ jobs:
       - name: Sign Files for Draft Release
         run: |
           gpg -K
-          version=${{ steps.collect-data.outputs.extensionVersion }}"
+          version=${{ steps.collect-data.outputs.extensionVersion }}
           ./.github/sign_artifact.sh ./assets/${{ env.artifact_id }}-${version}.jar
           ./.github/sign_artifact.sh ./assets/${{ env.artifact_id }}-${version}.pom
           ./.github/sign_artifact.sh ./assets/${{ env.artifact_id }}-${version}-javadoc.jar
