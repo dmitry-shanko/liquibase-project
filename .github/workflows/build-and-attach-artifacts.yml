@@ -100,7 +100,7 @@ jobs:
           assets: "${{ env.artifact_id }}-*"
 
   sign-release:
-    needs: [ prepare-releases ]
+    needs: [ prepare-release ]
     name: Sign Release
     runs-on: ubuntu-latest
     steps:
