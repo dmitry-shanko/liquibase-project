@@ -39,8 +39,9 @@ jobs:
         id: collect-data
         uses: actions/github-script@v4
         with:
+          run: version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
           script: |
-            core.setOutput("extensionVersion", $(mvn help:evaluate -Dexpression=project.version -q -DforceStdout));
+            core.setOutput("extensionVersion", $version);
 
       - run: |
           echo "Saw Extension version $(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
