@@ -60,6 +60,7 @@ jobs:
     name: Download Prepared Artifacts
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
       - name: Get Reusable Script Files
         run: |
           curl -o $PWD/.github/get_draft_release.sh https://raw.githubusercontent.com/liquibase/build-logic/v0.3.1/.github/get_draft_release.sh
