@@ -18,8 +18,8 @@ on:
         required: true
 
 jobs:
-  setup:
-    name: Set Up Execution
+  build-artifacts:
+    name: Build and attach maven artifacts
     runs-on: ubuntu-latest
     outputs:
       extensionVersion: ${{ steps.collect-data.outputs.extensionVersion }}
@@ -32,14 +32,9 @@ jobs:
             core.setOutput("extensionVersion", context.payload.inputs.extensionVersion);
 
       - run: |
-          echo "Saw Extension version ${{ steps.collect-data.outputs.extensionVersion }}"  
+          echo "Saw Extension version ${{ steps.collect-data.outputs.extensionVersion }}"
 
-  build:
-    name: Build Maven Artifacts
-    runs-on: ubuntu-latest
-    steps:
       - uses: actions/checkout@v3
-
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
@@ -56,12 +51,14 @@ jobs:
           name: liquibase-project
           path: target/*
 
-  download-artifacts:
-    needs: [ setup, build ]
-    name: Download Prepared Artifacts
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
+      - name: Get Reusable Script Files
+        run: |
+          curl -o $PWD/.github/get_draft_release.sh https://raw.githubusercontent.com/liquibase/build-logic/v0.3.1/.github/get_draft_release.sh
+          curl -o $PWD/.github/sign_artifact.sh https://raw.githubusercontent.com/liquibase/build-logic/v0.3.1/.github/sign_artifact.sh
+          curl -o $PWD/.github/upload_asset.sh https://raw.githubusercontent.com/liquibase/build-logic/v0.3.1/.github/upload_asset.sh
+          chmod +x $PWD/.github/get_draft_release.sh
+          chmod +x $PWD/.github/sign_artifact.sh
+          chmod +x $PWD/.github/upload_asset.sh
 
       - name: Get Artifact ID
         id: get-artifact-id
@@ -71,21 +68,6 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: liquibase-project
-
-  prepare-and-sign-release:
-    needs: [ download-artifacts ]
-    name: Prepare and Sign Release
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Get Reusable Script Files
-        run: |
-          curl -o $PWD/.github/get_draft_release.sh https://raw.githubusercontent.com/liquibase/build-logic/v0.3.1/.github/get_draft_release.sh
-          curl -o $PWD/.github/sign_artifact.sh https://raw.githubusercontent.com/liquibase/build-logic/v0.3.1/.github/sign_artifact.sh
-          curl -o $PWD/.github/upload_asset.sh https://raw.githubusercontent.com/liquibase/build-logic/v0.3.1/.github/upload_asset.sh
-          chmod +x $PWD/.github/get_draft_release.sh
-          chmod +x $PWD/.github/sign_artifact.sh
-          chmod +x $PWD/.github/upload_asset.sh
 
       - name: Get Release Tag
         id: get-release-tag
