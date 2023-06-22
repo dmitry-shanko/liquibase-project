@@ -22,7 +22,19 @@ jobs:
     name: Attach Artifact to Release
     #if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
+    outputs:
+      extensionVersion: ${{ steps.collect-data.outputs.extensionVersion }}
     steps:
+      - name: Collect Data
+          id: collect-data
+          uses: actions/github-script@v4
+          with:
+            script: |
+              core.setOutput("extensionVersion", context.payload.inputs.extensionVersion);
+
+      - run: |
+          echo "Saw Extension version ${{ steps.collect-data.outputs.extensionVersion }}"
+
       - uses: actions/checkout@v3
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -87,7 +99,7 @@ jobs:
       - name: Sign Files for Draft Release
         run: |
           gpg -K
-          version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          version=${{ steps.collect-data.outputs.extensionVersion }}"
           ./.github/sign_artifact.sh ./assets/${{ env.artifact_id }}-${version}.jar
           ./.github/sign_artifact.sh ./assets/${{ env.artifact_id }}-${version}.pom
           ./.github/sign_artifact.sh ./assets/${{ env.artifact_id }}-${version}-javadoc.jar
