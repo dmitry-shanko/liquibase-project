@@ -97,8 +97,10 @@ jobs:
       - name: Sign Files for Draft Release
         run: |
           gpg -K
+          passphrase="${{ secrets.GPG_PASSPHRASE }}"
+          export GPG_TTY=$(tty)
           version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          ./.github/sign_artifact.sh ./${{ env.artifact_id }}-${version}.jar
+          echo "$passphrase" | gpg --batch --pinentry-mode loopback --passphrase-fd 0 --sign --armor --detach-sign ./${{ env.artifact_id }}-${version}.jar
       #          ./.github/sign_artifact.sh ./${{ env.artifact_id }}-${version}.pom
       #          ./.github/sign_artifact.sh ./${{ env.artifact_id }}-${version}-javadoc.jar
       #          ./.github/sign_artifact.sh ./${{ env.artifact_id }}-${version}-sources.jar
