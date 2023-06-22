@@ -12,10 +12,6 @@ on:
       GPG_PASSPHRASE:
         description: 'GPG_PASSPHRASE from the caller workflow'
         required: true
-    inputs:
-      extensionVersion:
-        description: 'Extension Version'
-        required: false
 
 jobs:
   build-artifacts:
