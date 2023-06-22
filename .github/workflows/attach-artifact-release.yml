@@ -26,11 +26,11 @@ jobs:
       extensionVersion: ${{ steps.collect-data.outputs.extensionVersion }}
     steps:
       - name: Collect Data
-          id: collect-data
-          uses: actions/github-script@v4
-          with:
-            script: |
-              core.setOutput("extensionVersion", context.payload.inputs.extensionVersion);
+        id: collect-data
+        uses: actions/github-script@v4
+        with:
+          script: |
+            core.setOutput("extensionVersion", context.payload.inputs.extensionVersion);
 
       - run: |
           echo "Saw Extension version ${{ steps.collect-data.outputs.extensionVersion }}"
