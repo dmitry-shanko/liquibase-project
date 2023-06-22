@@ -39,6 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
@@ -60,6 +61,8 @@ jobs:
     name: Download Prepared Artifacts
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
+
       - name: Get Artifact ID
         id: get-artifact-id
         run: echo "artifact_id=$(mvn --file pom.xml help:evaluate -Dexpression=project.artifactId -q -DforceStdout)" >> $GITHUB_ENV
