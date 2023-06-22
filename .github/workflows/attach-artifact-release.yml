@@ -18,9 +18,8 @@ on:
         required: true
 
 jobs:
-  attach-to-release:
-    name: Attach Artifact to Release
-    #if: github.event.pull_request.merged == true
+  build-artifacts:
+    name: Build Maven Artifacts
     runs-on: ubuntu-latest
     outputs:
       extensionVersion: ${{ steps.collect-data.outputs.extensionVersion }}
@@ -52,6 +51,10 @@ jobs:
           name: liquibase-project
           path: target/*
 
+  attach-to-release:
+    name: Attach Artifact to Release
+    runs-on: ubuntu-latest
+    steps:
       - run: sleep 30
       - uses: actions/checkout@v3
 
