@@ -69,9 +69,9 @@ jobs:
         with:
           name: liquibase-project
 
-  prepare-release:
+  prepare-and-sign-release:
     needs: [ download-artifacts ]
-    name: Prepare Release
+    name: Prepare and Sign Release
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -100,11 +100,6 @@ jobs:
           fail-if-no-release: false
           assets: "${{ env.artifact_id }}-*"
 
-  sign-release:
-    needs: [ prepare-release ]
-    name: Sign Release
-    runs-on: ubuntu-latest
-    steps:
       - name: Import GPG key
         id: import_gpg
         uses: crazy-max/ghaction-import-gpg@v5
