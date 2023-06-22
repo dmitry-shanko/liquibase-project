@@ -96,10 +96,10 @@ jobs:
         run: |
           gpg -K
           version=${{ steps.collect-data.outputs.extensionVersion }}
-          ./.github/sign_artifact.sh ./assets/${{ env.artifact_id }}-${version}.jar
-          ./.github/sign_artifact.sh ./assets/${{ env.artifact_id }}-${version}.pom
-          ./.github/sign_artifact.sh ./assets/${{ env.artifact_id }}-${version}-javadoc.jar
-          ./.github/sign_artifact.sh ./assets/${{ env.artifact_id }}-${version}-sources.jar
+          ./.github/sign_artifact.sh ./${{ env.artifact_id }}-${version}.jar
+#          ./.github/sign_artifact.sh ./${{ env.artifact_id }}-${version}.pom
+#          ./.github/sign_artifact.sh ./${{ env.artifact_id }}-${version}-javadoc.jar
+#          ./.github/sign_artifact.sh ./${{ env.artifact_id }}-${version}-sources.jar
 
       - name: Attach Files to Draft Release
         id: upload-release-asset
