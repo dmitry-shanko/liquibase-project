@@ -19,7 +19,7 @@ on:
 
 jobs:
   build-artifacts:
-    name: Build Maven Artifacts
+    name: Build and attach maven artifacts
     runs-on: ubuntu-latest
     outputs:
       extensionVersion: ${{ steps.collect-data.outputs.extensionVersion }}
@@ -51,12 +51,8 @@ jobs:
           name: liquibase-project
           path: target/*
 
-  attach-to-release:
-    name: Attach Artifact to Release
-    runs-on: ubuntu-latest
-    steps:
-      - run: sleep 30
-      - uses: actions/checkout@v3
+     # - run: sleep 10
+     # - uses: actions/checkout@v3
 
       - name: Get Reusable Script Files
         run: |
