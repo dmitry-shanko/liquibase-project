@@ -48,7 +48,7 @@ jobs:
         uses: actions/github-script@v4
         with:
           script: |
-            core.setOutput("extensionVersion", env.artifact_version);
+            core.setOutput("extensionVersion", '${{ env.artifact_version }}');
 
       - name: Echo Build Info
         id: echo-version
